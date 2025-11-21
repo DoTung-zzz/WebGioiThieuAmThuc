@@ -1,0 +1,119 @@
+/* Login Page Custom Styles */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-5px);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.form-floating {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #e1e1e1;
+    padding: 12px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+    /* Primary color fade */
+    border-color: #FF6B6B;
+    /* Primary color */
+}
+
+.btn-login {
+    background: linear-gradient(45deg, #FF6B6B, #ff8e8e);
+    /* Primary gradient */
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    width: 100%;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-login:hover {
+    background: linear-gradient(45deg, #e05555, #ff6b6b);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+}
+
+.login-footer {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+}
+
+.login-footer a {
+    color: #FF6B6B;
+    /* Primary color */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.login-footer a:hover {
+    color: #e05555;
+    text-decoration: underline;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    color: #aaa;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #eee;
+}
+
+.divider:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.divider:not(:empty)::after {
+    margin-left: .25em;
+}

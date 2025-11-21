@@ -2,7 +2,95 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section">
+    <div class="hero-content container">
+        <h1 class="display-3 fw-bold">Taste the Essence of Vietnam</h1>
+        <p class="lead mb-4">Discover authentic regional specialties and culinary hidden gems.</p>
+        <a href="#featured" class="btn btn-primary btn-lg px-5 py-3">Explore Now</a>
+    </div>
+</div>
+
+<div id="featured" class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark">Featured Specialties</h2>
+        <p class="text-muted">Curated selection of the most popular dishes</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Placeholder Item 1 -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Pho Bo" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <span class="badge bg-primary mb-2">Northern Region</span>
+                    <h5 class="card-title fw-bold">Pho Bo (Beef Noodle Soup)</h5>
+                    <p class="card-text text-muted small">The iconic Vietnamese noodle soup with rich beef broth and fresh herbs.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-warning"><i class="fas fa-star"></i> 4.9</span>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder Item 2 -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1513262640554-b26a4350d964?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Bun Cha" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <span class="badge bg-primary mb-2">Hanoi</span>
+                    <h5 class="card-title fw-bold">Bun Cha</h5>
+                    <p class="card-text text-muted small">Grilled pork patties served with vermicelli noodles and fresh herbs.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-warning"><i class="fas fa-star"></i> 4.8</span>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder Item 3 -->
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+                <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Banh Mi" style="height: 250px; object-fit: cover;">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2">Nationwide</span>
+                    <h5 class="card-title fw-bold">Banh Mi</h5>
+                    <p class="card-text text-muted small">Crispy baguette filled with savory meats, pate, and pickled vegetables.</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="text-warning"><i class="fas fa-star"></i> 4.7</span>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h2 class="fw-bold mb-4">About AmThucViet</h2>
+                <p class="text-muted mb-4">
+                    We are dedicated to preserving and promoting the rich culinary heritage of Vietnam. 
+                    From the bustling streets of Hanoi to the floating markets of the Mekong Delta, 
+                    we bring you the stories and flavors that make Vietnamese cuisine unique.
+                </p>
+                <div class="d-flex gap-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle text-primary me-2"></i>
+                        <span>Authentic Recipes</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-check-circle text-primary me-2"></i>
+                        <span>Local Guides</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mt-4 mt-md-0">
+                <img src="https://images.unsplash.com/photo-1555126634-323283e090fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" class="img-fluid rounded-3 shadow" alt="Vietnamese Food">
+            </div>
+        </div>
+    </div>
 </div>

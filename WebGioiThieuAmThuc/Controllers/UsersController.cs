@@ -153,5 +153,80 @@ namespace WebGioiThieuAmThuc.Controllers
         {
             return _context.Users.Any(e => e.UserId == id);
         }
+
+        // GET: Users/Register
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        // POST: Users/Register
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([Bind("Username,PasswordHash,Fullname,Email,Phone")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                if (UserExists(user.Username)) // Check if username exists
+                {
+                     ModelState.AddModelError("Username", "Username already exists.");
+                     return View(user);
+                }
+
+                user.CreatedAt = DateTime.Now;
+                user.Status = true;
+                user.Role = "member"; // Default role
+
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Login));
+            }
+            return View(user);
+        }
+
+        private bool UserExists(string username)
+        {
+            return _context.Users.Any(e => e.Username == username);
+        }
+
+        // GET: Users/Login
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        // POST: Users/Login
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string username, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == password); // Note: In production, use proper hashing!
+
+                if (user != null)
+                {
+                    // Store user info in Session
+                    HttpContext.Session.SetString("UserId", user.UserId.ToString());
+                    HttpContext.Session.SetString("Username", user.Username);
+                    if (!string.IsNullOrEmpty(user.Fullname))
+                    {
+                         HttpContext.Session.SetString("Fullname", user.Fullname);
+                    }
+
+                    return RedirectToAction("Index", "Home");
+                }
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            }
+            return View();
+        }
+
+        public IActionResult Logout()
+        {
+            // Clear session
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

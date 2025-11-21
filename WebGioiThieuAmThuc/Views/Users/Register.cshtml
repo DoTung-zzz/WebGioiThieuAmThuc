@@ -1,0 +1,79 @@
+@{
+    ViewData["Title"] = "Register";
+    Layout = null;
+}
+
+@model WebGioiThieuAmThuc.Models.User
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebGioiThieuAmThuc</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="login-container">
+                    <div class="login-header">
+                        <h2>Create Account</h2>
+                        <p>Join us to explore culinary delights</p>
+                    </div>
+                    
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Username" class="form-control" placeholder="Username" required />
+                            <label asp-for="Username"><i class="fas fa-user me-2"></i>Username</label>
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Password" required />
+                            <label asp-for="PasswordHash"><i class="fas fa-lock me-2"></i>Password</label>
+                            <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Fullname" class="form-control" placeholder="Full Name" />
+                            <label asp-for="Fullname"><i class="fas fa-id-card me-2"></i>Full Name</label>
+                            <span asp-validation-for="Fullname" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" type="email" class="form-control" placeholder="Email" />
+                            <label asp-for="Email"><i class="fas fa-envelope me-2"></i>Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Phone" class="form-control" placeholder="Phone" />
+                            <label asp-for="Phone"><i class="fas fa-phone me-2"></i>Phone</label>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-login text-white w-100">
+                            Sign Up
+                        </button>
+
+                        <div class="divider">OR</div>
+
+                        <div class="login-footer">
+                            <p class="text-secondary">Already have an account? <a asp-action="Login">Sign in</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

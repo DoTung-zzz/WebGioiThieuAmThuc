@@ -26,9 +26,11 @@
                     <form asp-action="Login" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+                        <div class="mb-3">
                             <label for="username"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required style="padding-right: 45px;">
+                            </div>
                         </div>
                         
                         <div class="mb-3">

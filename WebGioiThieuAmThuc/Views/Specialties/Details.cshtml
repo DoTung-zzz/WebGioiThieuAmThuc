@@ -1,0 +1,112 @@
+@model WebGioiThieuAmThuc.Models.Specialty
+
+@{
+    ViewData["Title"] = "Chi tiết Đặc sản";
+}
+
+<div class="container">
+    <h1>@Model.Name</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid rounded" alt="@Model.Name">
+            }
+            else
+            {
+                <img src="https://via.placeholder.com/600x400?text=No+Image" class="img-fluid rounded" alt="No Image">
+            }
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Vùng miền:</dt>
+                <dd class="col-sm-8">@Model.Region.RegionName</dd>
+
+                <dt class="col-sm-4">Người đăng:</dt>
+                <dd class="col-sm-8">@(Model.CreatedByNavigation?.Fullname ?? "Ẩn danh")</dd>
+
+                <dt class="col-sm-4">Ngày đăng:</dt>
+                <dd class="col-sm-8">@Model.CreatedAt?.ToString("dd/MM/yyyy")</dd>
+            </dl>
+            <div>
+                <h5>Mô tả ngắn:</h5>
+                <p>@Model.ShortDescription</p>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Mô tả chi tiết</h3>
+            <div class="border p-3 rounded bg-light">
+                @Html.Raw(Model.FullDescription?.Replace("\n", "<br>"))
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        @if (Context.Session.GetString("UserId") != null && (Context.Session.GetString("UserId") == Model.CreatedBy.ToString() || Context.Session.GetString("Role") == "admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.SpecialtyId" class="btn btn-warning">Chỉnh sửa</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+    </div>
+
+    <hr />
+    <div class="row mt-4">
+        <div class="col-12">
+            <h3>Đánh giá & Bình luận</h3>
+            
+            @if (Context.Session.GetString("UserId") != null)
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Viết đánh giá</h5>
+                        <form asp-action="AddReview" method="post">
+                            <input type="hidden" name="specialtyId" value="@Model.SpecialtyId" />
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">Điểm đánh giá</label>
+                                <select name="rating" id="rating" class="form-select" style="width: auto;">
+                                    <option value="5">5 sao - Tuyệt vời</option>
+                                    <option value="4">4 sao - Tốt</option>
+                                    <option value="3">3 sao - Bình thường</option>
+                                    <option value="2">2 sao - Tệ</option>
+                                    <option value="1">1 sao - Rất tệ</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="comment" class="form-label">Bình luận</label>
+                                <textarea name="comment" id="comment" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    Vui lòng <a asp-controller="Users" asp-action="Login">đăng nhập</a> để viết đánh giá.
+                </div>
+            }
+
+            @if (Model.Ratings != null && Model.Ratings.Count > 0)
+            {
+                <ul class="list-group">
+                    @foreach (var rating in Model.Ratings)
+                    {
+                        <li class="list-group-item">
+                            <strong>@(rating.User?.Fullname ?? "Người dùng")</strong> - <span class="text-warning">@rating.Rating1/5 sao</span>
+                            <p>@rating.Comment</p>
+                            <small class="text-muted">@rating.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>Chưa có đánh giá nào.</p>
+            }
+        </div>
+    </div>
+</div>

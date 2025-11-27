@@ -22,7 +22,6 @@ body {
   background-color: var(--light-color);
   line-height: 1.6;
   margin-bottom: 0;
-  /* Remove default margin */
 }
 
 a {
@@ -71,8 +70,6 @@ a:hover {
 
 .nav-link:hover::after {
   width: 100%;
-  padding: 40px 0 20px;
-  margin-top: auto;
 }
 
 footer a {
@@ -105,7 +102,7 @@ footer a:hover {
   box-shadow: var(--shadow);
 }
 
-/* Hero Section Styles (will be used in Index) */
+/* Hero Section Styles */
 .hero-section {
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
   background-size: cover;
@@ -117,7 +114,6 @@ footer a:hover {
   text-align: center;
   color: white;
   margin-top: -80px;
-  /* Offset navbar height */
   padding-top: 80px;
 }
 

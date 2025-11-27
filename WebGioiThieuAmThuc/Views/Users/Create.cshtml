@@ -1,12 +1,12 @@
 ﻿@model WebGioiThieuAmThuc.Models.User
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Tạo mới";
 }
 
-<h1>Create</h1>
+<h1>Tạo mới</h1>
 
-<h4>User</h4>
+<h4>Thành viên</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -38,14 +38,14 @@
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Quay lại danh sách</a>
 </div>
 
 @section Scripts {

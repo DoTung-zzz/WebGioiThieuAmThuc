@@ -21,28 +21,28 @@
             <div class="col-md-6 col-lg-5">
                 <div class="login-container">
                     <div class="login-header">
-                        <h2>Create Account</h2>
-                        <p>Join us to explore culinary delights</p>
+                        <h2>Tạo tài khoản</h2>
+                        <p>Tham gia cùng chúng tôi để khám phá ẩm thực</p>
                     </div>
                     
                     <form asp-action="Register" method="post">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         
                         <div class="form-floating mb-3">
-                            <input asp-for="Username" class="form-control" placeholder="Username" required />
-                            <label asp-for="Username"><i class="fas fa-user me-2"></i>Username</label>
+                            <input asp-for="Username" class="form-control" placeholder="Tên đăng nhập" required />
+                            <label asp-for="Username"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
                         
                         <div class="form-floating mb-3">
-                            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Password" required />
-                            <label asp-for="PasswordHash"><i class="fas fa-lock me-2"></i>Password</label>
+                            <input asp-for="PasswordHash" type="password" class="form-control" placeholder="Mật khẩu" required />
+                            <label asp-for="PasswordHash"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
                             <span asp-validation-for="PasswordHash" class="text-danger"></span>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Fullname" class="form-control" placeholder="Full Name" />
-                            <label asp-for="Fullname"><i class="fas fa-id-card me-2"></i>Full Name</label>
+                            <input asp-for="Fullname" class="form-control" placeholder="Họ và tên" />
+                            <label asp-for="Fullname"><i class="fas fa-id-card me-2"></i>Họ và tên</label>
                             <span asp-validation-for="Fullname" class="text-danger"></span>
                         </div>
 
@@ -53,19 +53,19 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Phone" class="form-control" placeholder="Phone" />
-                            <label asp-for="Phone"><i class="fas fa-phone me-2"></i>Phone</label>
+                            <input asp-for="Phone" class="form-control" placeholder="Số điện thoại" />
+                            <label asp-for="Phone"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-login text-white w-100">
-                            Sign Up
+                            Đăng ký
                         </button>
 
-                        <div class="divider">OR</div>
+                        <div class="divider">HOẶC</div>
 
                         <div class="login-footer">
-                            <p class="text-secondary">Already have an account? <a asp-action="Login">Sign in</a></p>
+                            <p class="text-secondary">Đã có tài khoản? <a asp-action="Login">Đăng nhập</a></p>
                         </div>
                     </form>
                 </div>

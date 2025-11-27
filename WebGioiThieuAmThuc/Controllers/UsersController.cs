@@ -214,6 +214,10 @@ namespace WebGioiThieuAmThuc.Controllers
                     {
                          HttpContext.Session.SetString("Fullname", user.Fullname);
                     }
+                    if (!string.IsNullOrEmpty(user.Role))
+                    {
+                        HttpContext.Session.SetString("Role", user.Role);
+                    }
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -227,6 +231,148 @@ namespace WebGioiThieuAmThuc.Controllers
             // Clear session
             HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
+        }
+        // GET: Users/Profile
+        public async Task<IActionResult> Profile()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        // POST: Users/Profile
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile([Bind("UserId,Username,Fullname,Email,Phone,AvatarUrl")] User user, IFormFile? avatarFile)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null || user.UserId != int.Parse(userId))
+            {
+                return Unauthorized();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var existingUser = await _context.Users.FindAsync(user.UserId);
+                    if (existingUser == null) return NotFound();
+
+                    // Handle avatar upload
+                    if (avatarFile != null && avatarFile.Length > 0)
+                    {
+                        var fileName = Path.GetFileName(avatarFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars", fileName);
+                        Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars"));
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await avatarFile.CopyToAsync(stream);
+                        }
+                        existingUser.AvatarUrl = "/images/avatars/" + fileName;
+                    }
+
+                    existingUser.Fullname = user.Fullname;
+                    existingUser.Email = user.Email;
+                    existingUser.Phone = user.Phone;
+
+                    _context.Update(existingUser);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.UserId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Profile));
+            }
+            return View(user);
+        }
+
+        // GET: Users/ChangePassword
+        public IActionResult ChangePassword()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        // POST: Users/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(string currentPassword, string newPassword, string confirmPassword)
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                ViewBag.Error = "Mật khẩu mới và xác nhận không khớp.";
+                return View();
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null || user.PasswordHash != currentPassword)
+            {
+                ViewBag.Error = "Mật khẩu hiện tại không đúng.";
+                return View();
+            }
+
+            user.PasswordHash = newPassword;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Success = "Đổi mật khẩu thành công!";
+            return View();
+        }
+
+        // GET: Users/ForgotPassword
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        // POST: Users/ForgotPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string username, string email, string newPassword)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Email == email);
+            
+            if (user == null)
+            {
+                ViewBag.Error = "Tên đăng nhập hoặc email không đúng.";
+                return View();
+            }
+
+            user.PasswordHash = newPassword;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewBag.Success = "Đặt lại mật khẩu thành công!";
+            return View();
         }
     }
 }

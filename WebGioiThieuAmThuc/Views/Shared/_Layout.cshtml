@@ -13,47 +13,66 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm fixed-top">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="fas fa-utensils me-2"></i>AmThucViet
+                    <i class="fas fa-utensils me-2"></i>Ẩm Thực Việt
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    @using Microsoft.AspNetCore.Http
+                    @inject IHttpContextAccessor HttpContextAccessor
+                    @{
+                        var username = HttpContextAccessor.HttpContext?.Session.GetString("Username");
+                    }
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="regionDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Vùng miền
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="regionDropdown">
+                                <li><a class="dropdown-item" asp-controller="Specialties" asp-action="Index" asp-route-regionId="1">Miền Bắc</a></li>
+                                <li><a class="dropdown-item" asp-controller="Specialties" asp-action="Index" asp-route-regionId="2">Miền Trung</a></li>
+                                <li><a class="dropdown-item" asp-controller="Specialties" asp-action="Index" asp-route-regionId="3">Miền Nam</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Specialties" asp-action="Index">Tất cả đặc sản</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Forum" asp-action="Index">Diễn đàn</a>
+                        </li>
+                        @if (!string.IsNullOrEmpty(username))
+                        {
+                             <li class="nav-item">
+                                <a class="nav-link" asp-controller="Specialties" asp-action="Create">Đăng bài</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav">
-                        @using Microsoft.AspNetCore.Http
-                        @inject IHttpContextAccessor HttpContextAccessor
-                        @{
-                            var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
-                        }
                         @if (!string.IsNullOrEmpty(username))
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Hello, <strong>@username</strong>
+                                    Xin chào, <strong>@username</strong>
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Profile"><i class="fas fa-user me-2"></i>Hồ sơ</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Logout">Logout</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Users" asp-action="Logout"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                                 </ul>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="btn btn-outline-primary me-2" asp-controller="Users" asp-action="Login">Login</a>
+                                <a class="btn btn-outline-primary me-2" asp-controller="Users" asp-action="Login">Đăng nhập</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary text-white" asp-controller="Users" asp-action="Register">Register</a>
+                                <a class="btn btn-primary text-white" asp-controller="Users" asp-action="Register">Đăng ký</a>
                             </li>
                         }
                     </ul>

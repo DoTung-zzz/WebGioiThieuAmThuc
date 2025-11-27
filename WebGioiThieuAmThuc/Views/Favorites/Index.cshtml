@@ -1,0 +1,125 @@
+@model IEnumerable<WebGioiThieuAmThuc.Models.Favorite>
+
+@{
+    ViewData["Title"] = "Danh sách yêu thích";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-danger"><i class="fas fa-heart me-3"></i>Danh sách yêu thích</h1>
+        <p class="lead text-muted">Những đặc sản bạn đã lưu</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="fas fa-heart-broken fa-5x text-muted mb-3"></i>
+            <h4 class="text-muted">Chưa có đặc sản yêu thích nào</h4>
+            <p class="text-muted">Hãy khám phá và thêm những món ăn bạn thích!</p>
+            <a asp-controller="Specialties" asp-action="Index" class="btn btn-primary mt-3">
+                <i class="fas fa-search me-2"></i>Khám phá đặc sản
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="position-relative">
+                            <img src="@(string.IsNullOrEmpty(item.Specialty.ImageUrl) ? "https://via.placeholder.com/400x250" : item.Specialty.ImageUrl)" 
+                                 class="card-img-top" alt="@item.Specialty.Name" style="height: 250px; object-fit: cover;">
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-3">
+                                @item.Specialty.Region?.RegionName
+                            </span>
+                            <button class="btn btn-danger position-absolute top-0 start-0 m-3 favorite-btn" 
+                                    data-specialty-id="@item.SpecialtyId"
+                                    onclick="toggleFavorite(@item.SpecialtyId, this)">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">
+                                <a asp-controller="Specialties" asp-action="Details" asp-route-id="@item.SpecialtyId" class="text-decoration-none text-dark">
+                                    @item.Specialty.Name
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted text-truncate-3">
+                                @item.Specialty.ShortDescription
+                            </p>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>Đã lưu: @item.CreatedAt?.ToString("dd/MM/yyyy")
+                            </small>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-warning">
+                                    @{
+                                        var avgRating = item.Specialty.Ratings.Any() ? item.Specialty.Ratings.Average(r => r.Rating1) : 0;
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= avgRating)
+                                            {
+                                                <i class="fas fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="far fa-star"></i>
+                                            }
+                                        }
+                                    }
+                                    <small class="text-muted ms-1">(@item.Specialty.Ratings.Count)</small>
+                                </div>
+                                <a asp-controller="Specialties" asp-action="Details" asp-route-id="@item.SpecialtyId" class="btn btn-sm btn-primary">
+                                    Xem chi tiết <i class="fas fa-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hover-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+    }
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+
+<script>
+function toggleFavorite(specialtyId, button) {
+    fetch('/Favorites/Remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'specialtyId=' + specialtyId
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Remove the card from view
+            button.closest('.col-md-6').remove();
+            
+            // Check if no more favorites
+            if (document.querySelectorAll('.hover-card').length === 0) {
+                location.reload();
+            }
+        }
+    });
+}
+</script>

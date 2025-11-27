@@ -1,0 +1,54 @@
+@model WebGioiThieuAmThuc.Models.Specialty
+
+@{
+    ViewData["Title"] = "Chỉnh sửa đặc sản";
+}
+
+<h1>Chỉnh sửa đặc sản</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SpecialtyId" />
+            <input type="hidden" asp-for="CreatedBy" />
+            <input type="hidden" asp-for="CreatedAt" />
+            <input type="hidden" asp-for="Status" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Name" class="control-label">Tên đặc sản</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="RegionId" class="control-label">Vùng miền</label>
+                <select asp-for="RegionId" class="form-control" asp-items="ViewBag.RegionId"></select>
+                <span asp-validation-for="RegionId" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ImageUrl" class="control-label">Link hình ảnh</label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="ShortDescription" class="control-label">Mô tả ngắn</label>
+                <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="FullDescription" class="control-label">Mô tả chi tiết</label>
+                <textarea asp-for="FullDescription" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="FullDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

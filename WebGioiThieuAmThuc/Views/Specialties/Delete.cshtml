@@ -1,0 +1,33 @@
+@model WebGioiThieuAmThuc.Models.Specialty
+
+@{
+    ViewData["Title"] = "Xóa đặc sản";
+}
+
+<h1>Xóa đặc sản</h1>
+
+<h3>Bạn có chắc chắn muốn xóa đặc sản này không?</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            Vùng miền
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Region.RegionName)
+        </dd>
+        <dt class = "col-sm-2">
+            Mô tả ngắn
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ShortDescription)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="SpecialtyId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

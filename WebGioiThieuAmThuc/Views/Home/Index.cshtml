@@ -4,16 +4,23 @@
 
 <div class="hero-section">
     <div class="hero-content container">
-        <h1 class="display-3 fw-bold">Taste the Essence of Vietnam</h1>
-        <p class="lead mb-4">Discover authentic regional specialties and culinary hidden gems.</p>
-        <a href="#featured" class="btn btn-primary btn-lg px-5 py-3">Explore Now</a>
+        <h1 class="display-3 fw-bold">Hương vị Tinh túy Việt Nam</h1>
+        <p class="lead mb-4">Khám phá đặc sản vùng miền và những viên ngọc ẩm thực ẩn giấu.</p>
+        <div class="d-flex gap-3 justify-content-center">
+            <a asp-controller="Specialties" asp-action="Index" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                <i class="fas fa-utensils me-2"></i>Khám phá Ngay
+            </a>
+            <a asp-controller="Forum" asp-action="Index" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">
+                <i class="fas fa-comments me-2"></i>Diễn đàn
+            </a>
+        </div>
     </div>
 </div>
 
 <div id="featured" class="container py-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold text-dark">Featured Specialties</h2>
-        <p class="text-muted">Curated selection of the most popular dishes</p>
+        <h2 class="fw-bold text-dark">Đặc sản Nổi bật</h2>
+        <p class="text-muted">Tuyển tập những món ăn phổ biến nhất</p>
     </div>
 
     <div class="row g-4">
@@ -22,12 +29,12 @@
             <div class="card h-100 border-0 shadow-sm">
                 <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Pho Bo" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
-                    <span class="badge bg-primary mb-2">Northern Region</span>
-                    <h5 class="card-title fw-bold">Pho Bo (Beef Noodle Soup)</h5>
-                    <p class="card-text text-muted small">The iconic Vietnamese noodle soup with rich beef broth and fresh herbs.</p>
+                    <span class="badge bg-primary mb-2">Miền Bắc</span>
+                    <h5 class="card-title fw-bold">Phở Bò</h5>
+                    <p class="card-text text-muted small">Món phở truyền thống với nước dùng bò đậm đà và thảo mộc tươi.</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="text-warning"><i class="fas fa-star"></i> 4.9</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
                     </div>
                 </div>
             </div>
@@ -38,12 +45,12 @@
             <div class="card h-100 border-0 shadow-sm">
                 <img src="https://images.unsplash.com/photo-1513262640554-b26a4350d964?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Bun Cha" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
-                    <span class="badge bg-primary mb-2">Hanoi</span>
-                    <h5 class="card-title fw-bold">Bun Cha</h5>
-                    <p class="card-text text-muted small">Grilled pork patties served with vermicelli noodles and fresh herbs.</p>
+                    <span class="badge bg-primary mb-2">Hà Nội</span>
+                    <h5 class="card-title fw-bold">Bún Chả</h5>
+                    <p class="card-text text-muted small">Chả nướng ăn kèm bún và rau sống.</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="text-warning"><i class="fas fa-star"></i> 4.8</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
                     </div>
                 </div>
             </div>
@@ -54,12 +61,12 @@
             <div class="card h-100 border-0 shadow-sm">
                 <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Banh Mi" style="height: 250px; object-fit: cover;">
                 <div class="card-body">
-                    <span class="badge bg-secondary mb-2">Nationwide</span>
-                    <h5 class="card-title fw-bold">Banh Mi</h5>
-                    <p class="card-text text-muted small">Crispy baguette filled with savory meats, pate, and pickled vegetables.</p>
+                    <span class="badge bg-secondary mb-2">Toàn quốc</span>
+                    <h5 class="card-title fw-bold">Bánh Mì</h5>
+                    <p class="card-text text-muted small">Bánh mì giòn tan với nhân thịt, pate và rau dưa.</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <span class="text-warning"><i class="fas fa-star"></i> 4.7</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">View Details</a>
+                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
                     </div>
                 </div>
             </div>
@@ -71,22 +78,22 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <h2 class="fw-bold mb-4">About AmThucViet</h2>
+                <h2 class="fw-bold mb-4">Về Ẩm Thực Việt</h2>
                 <p class="text-muted mb-4">
-                    We are dedicated to preserving and promoting the rich culinary heritage of Vietnam. 
-                    From the bustling streets of Hanoi to the floating markets of the Mekong Delta, 
-                    we bring you the stories and flavors that make Vietnamese cuisine unique.
+                    Chúng tôi tận tâm bảo tồn và phát huy di sản ẩm thực phong phú của Việt Nam. 
+                    Từ những con phố nhộn nhịp của Hà Nội đến chợ nổi miền Tây sông nước, 
+                    chúng tôi mang đến cho bạn những câu chuyện và hương vị làm nên nét độc đáo của ẩm thực Việt.
                 </p>
                 <div class="d-flex gap-3">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-check-circle text-primary me-2"></i>
-                        <span>Authentic Recipes</span>
+                        <span>Công thức Chính gốc</span>
                     </div>
                     <div class="d-flex align-items-center">
 
 
                         <i class="fas fa-check-circle text-primary me-2"></i>
-                        <span>Local Guides</span>
+                        <span>Hướng dẫn Địa phương</span>
                     </div>
                 </div>
             </div>

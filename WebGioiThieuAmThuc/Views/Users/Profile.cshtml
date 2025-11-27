@@ -1,0 +1,94 @@
+@model WebGioiThieuAmThuc.Models.User
+
+@{
+    ViewData["Title"] = "Hồ sơ của tôi";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        @if (!string.IsNullOrEmpty(Model.AvatarUrl))
+                        {
+                            <img src="@Model.AvatarUrl" class="rounded-circle" alt="Avatar" style="width: 150px; height: 150px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto text-white" style="width: 150px; height: 150px; font-size: 48px;">
+                                ?
+                            </div>
+                        }
+                    </div>
+                    <h4 class="fw-bold">@Model.Fullname</h4>
+                    <p class="text-muted">@@@Model.Username</p>
+                    <span class="badge bg-primary">@Model.Role</span>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm mt-3">
+                <div class="card-body">
+                    <a asp-action="ChangePassword" class="btn btn-outline-primary w-100 mb-2">
+                        <i class="fas fa-key me-2"></i>Đổi mật khẩu
+                    </a>
+                    <a asp-controller="Favorites" asp-action="Index" class="btn btn-outline-danger w-100">
+                        <i class="fas fa-heart me-2"></i>Danh sách yêu thích
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0 fw-bold">Thông tin cá nhân</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Profile" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="UserId" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên đăng nhập</label>
+                            <input asp-for="Username" class="form-control" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ và tên</label>
+                            <input asp-for="Fullname" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <small class="text-muted">
+                                @if (!string.IsNullOrEmpty(Model.Email))
+                                {
+                                    var emailParts = Model.Email.Split('@');
+                                    if (emailParts.Length == 2)
+                                    {
+                                        var maskedEmail = emailParts[0].Substring(0, Math.Min(3, emailParts[0].Length)) + "***@" + emailParts[1];
+                                        <span>Hiển thị công khai: @maskedEmail</span>
+                                    }
+                                }
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input asp-for="Phone" class="form-control" />
+                            <small class="text-muted">
+                                @if (!string.IsNullOrEmpty(Model.Phone) && Model.Phone.Length > 4)
+                                {
+                                    var maskedPhone = "***" + Model.Phone.Substring(Model.Phone.Length - 4);
+                                    <span>Hiển thị công khai: @maskedPhone</span>
+                                }
+                            </small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ảnh đại diện</label>
+                            <input type="file" name="avatarFile" class="form-control" accept="image/*" />
+                        </div>
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="fas fa-save me-2"></i>Lưu thay đổi
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

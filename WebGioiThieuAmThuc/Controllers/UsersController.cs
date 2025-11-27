@@ -253,7 +253,7 @@ namespace WebGioiThieuAmThuc.Controllers
         // POST: Users/Profile
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Profile([Bind("UserId,Username,Fullname,Email,Phone,AvatarUrl")] User user, IFormFile? avatarFile)
+        public async Task<IActionResult> Profile([Bind("UserId,Username,Fullname,Email,Phone")] User user)
         {
             var userId = HttpContext.Session.GetString("UserId");
             if (userId == null || user.UserId != int.Parse(userId))
@@ -267,20 +267,6 @@ namespace WebGioiThieuAmThuc.Controllers
                 {
                     var existingUser = await _context.Users.FindAsync(user.UserId);
                     if (existingUser == null) return NotFound();
-
-                    // Handle avatar upload
-                    if (avatarFile != null && avatarFile.Length > 0)
-                    {
-                        var fileName = Path.GetFileName(avatarFile.FileName);
-                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars", fileName);
-                        Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/avatars"));
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await avatarFile.CopyToAsync(stream);
-                        }
-                        existingUser.AvatarUrl = "/images/avatars/" + fileName;
-                    }
 
                     existingUser.Fullname = user.Fullname;
                     existingUser.Email = user.Email;

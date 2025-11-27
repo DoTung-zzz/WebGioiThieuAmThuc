@@ -1,22 +1,48 @@
 /* Login Page Custom Styles */
 body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveBackground 20s linear infinite;
+}
+
+@keyframes moveBackground {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(50px, 50px);
+    }
 }
 
 .login-container {
     background: rgba(255, 255, 255, 0.95);
     padding: 40px;
     border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 450px;
     backdrop-filter: blur(10px);
     transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .login-container:hover {
@@ -51,15 +77,12 @@ body {
 }
 
 .form-control:focus {
-    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
-    /* Primary color fade */
-    border-color: #FF6B6B;
-    /* Primary color */
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    border-color: #667eea;
 }
 
 .btn-login {
-    background: linear-gradient(45deg, #FF6B6B, #ff8e8e);
-    /* Primary gradient */
+    background: linear-gradient(45deg, #667eea, #764ba2);
     border: none;
     border-radius: 10px;
     padding: 12px;
@@ -71,9 +94,9 @@ body {
 }
 
 .btn-login:hover {
-    background: linear-gradient(45deg, #e05555, #ff6b6b);
+    background: linear-gradient(45deg, #5568d3, #6a3f8f);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
 }
 
 .login-footer {
@@ -83,15 +106,14 @@ body {
 }
 
 .login-footer a {
-    color: #FF6B6B;
-    /* Primary color */
+    color: #667eea;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
 }
 
 .login-footer a:hover {
-    color: #e05555;
+    color: #5568d3;
     text-decoration: underline;
 }
 
@@ -116,4 +138,15 @@ body {
 
 .divider:not(:empty)::after {
     margin-left: .25em;
+}
+
+/* Password input with floating label */
+.position-relative input:focus+label,
+.position-relative input:not(:placeholder-shown)+label {
+    top: -8px;
+    left: 8px;
+    font-size: 0.75rem;
+    background: white;
+    padding: 0 4px;
+    color: #667eea;
 }

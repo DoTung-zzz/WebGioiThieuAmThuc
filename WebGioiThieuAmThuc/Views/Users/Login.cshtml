@@ -31,9 +31,21 @@
                             <label for="username"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
                         </div>
                         
-                        <div class="form-floating mb-3">
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Mật khẩu" required>
-                            <label for="password"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                        <div class="mb-3">
+                            <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                            <div class="position-relative">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required style="padding-right: 45px;">
+                                <button class="btn btn-link position-absolute end-0 top-50 translate-middle-y" type="button" id="togglePassword" style="z-index: 10;">
+                                    <i class="fas fa-eye text-secondary" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe">
+                            <label class="form-check-label" for="rememberMe">
+                                Ghi nhớ đăng nhập
+                            </label>
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100 mb-3">
@@ -55,5 +67,21 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
 </body>
 </html>

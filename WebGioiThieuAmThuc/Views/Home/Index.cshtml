@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var featuredSpecialties = ViewData["FeaturedSpecialties"] as IEnumerable<WebGioiThieuAmThuc.Models.Specialty>;
 }
 
 <div class="hero-section">
@@ -24,9 +25,6 @@
     </div>
 
     <div class="row g-4">
-        @{
-            var featuredSpecialties = ViewData["FeaturedSpecialties"] as IEnumerable<WebGioiThieuAmThuc.Models.Specialty>;
-        }
         @if (featuredSpecialties != null && featuredSpecialties.Any())
         {
             @foreach (var item in featuredSpecialties)
@@ -48,11 +46,8 @@
                             <h5 class="card-title fw-bold">@item.Name</h5>
                             <p class="card-text text-muted small">@(string.IsNullOrEmpty(item.ShortDescription) ? "Món ăn đặc sản Việt Nam" : (item.ShortDescription.Length > 80 ? item.ShortDescription.Substring(0, 80) + "..." : item.ShortDescription))</p>
                             <div class="d-flex justify-content-between align-items-center mt-3">
-                                @{
-                                    var avgRating = item.Ratings?.Any() == true ? item.Ratings.Average(r => r.Rating1) : 0;
-                                }
                                 <span class="text-warning">
-                                    <i class="fas fa-star"></i> @avgRating.ToString("F1")
+                                    <i class="fas fa-star"></i> @((item.Ratings?.Any() == true ? item.Ratings.Average(r => r.Rating1 ?? 0) : 0).ToString("F1"))
                                 </span>
                                 <a asp-controller="Specialties" asp-action="Details" asp-route-id="@item.SpecialtyId" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
                             </div>

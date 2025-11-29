@@ -89,11 +89,11 @@ namespace WebGioiThieuAmThuc.Controllers
                 return RedirectToAction("Login", "Users");
             }
 
-            // Get distinct regions ordered by ID to ensure no duplicates
+            // Get distinct regions ordered by Name to ensure no duplicates
             var regions = _context.Regions
-                .GroupBy(r => r.RegionId)
+                .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
-                .OrderBy(r => r.RegionId)
+                .OrderBy(r => r.RegionName)
                 .ToList();
             
             ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName");
@@ -157,11 +157,11 @@ namespace WebGioiThieuAmThuc.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            // Get distinct regions ordered by ID to ensure no duplicates
+            // Get distinct regions ordered by Name to ensure no duplicates
             var regions = _context.Regions
-                .GroupBy(r => r.RegionId)
+                .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
-                .OrderBy(r => r.RegionId)
+                .OrderBy(r => r.RegionName)
                 .ToList();
             
             ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);
@@ -196,11 +196,11 @@ namespace WebGioiThieuAmThuc.Controllers
                 return Unauthorized();
             }
 
-            // Get distinct regions ordered by ID to ensure no duplicates
+            // Get distinct regions ordered by Name to ensure no duplicates
             var regions = _context.Regions
-                .GroupBy(r => r.RegionId)
+                .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
-                .OrderBy(r => r.RegionId)
+                .OrderBy(r => r.RegionName)
                 .ToList();
             
             ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);
@@ -308,11 +308,11 @@ namespace WebGioiThieuAmThuc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            // Get distinct regions ordered by ID to ensure no duplicates
+            // Get distinct regions ordered by Name to ensure no duplicates
             var regions = _context.Regions
-                .GroupBy(r => r.RegionId)
+                .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
-                .OrderBy(r => r.RegionId)
+                .OrderBy(r => r.RegionName)
                 .ToList();
             
             ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);

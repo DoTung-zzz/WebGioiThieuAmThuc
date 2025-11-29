@@ -1,0 +1,80 @@
+@{
+    ViewData["Title"] = "Chi tiết món";
+}
+
+<section class="container py-5">
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="ratio ratio-4x3 rounded-4 overflow-hidden shadow-sm">
+                <img src="https://images.unsplash.com/photo-1608039829574-2323dd0a7b9a?auto=format&fit=crop&w=1200&q=80" alt="Mì Quảng" class="w-100 h-100" style="object-fit: cover;">
+            </div>
+            <div class="d-flex gap-3 mt-4">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" class="rounded-3 shadow-sm" style="width: 100px; height: 80px; object-fit: cover;" alt="Ảnh phụ 1">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" class="rounded-3 shadow-sm" style="width: 100px; height: 80px; object-fit: cover;" alt="Ảnh phụ 2">
+                <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=400&q=80" class="rounded-3 shadow-sm" style="width: 100px; height: 80px; object-fit: cover;" alt="Ảnh phụ 3">
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill">Miền Trung</span>
+            <h1 class="fw-bold mt-3">Mì Quảng tôm thịt</h1>
+            <p class="text-muted mb-4">Phần mì với sợi vàng óng, nước dùng sánh nhẹ từ xương heo và hương thơm từ nghệ. Ăn kèm bánh tráng mè nướng, rau sống và đậu phộng rang.</p>
+
+            <div class="d-flex align-items-center gap-4 mb-4">
+                <div>
+                    <h4 class="mb-0 fw-bold text-primary">65.000đ</h4>
+                    <small class="text-muted">Giá tham khảo</small>
+                </div>
+                <div class="vr"></div>
+                <div>
+                    <h6 class="mb-0 text-muted">Đánh giá</h6>
+                    <div class="text-warning fw-bold">4.8 <i class="fas fa-star"></i></div>
+                </div>
+                <div class="vr"></div>
+                <div>
+                    <h6 class="mb-0 text-muted">Thời gian chuẩn bị</h6>
+                    <p class="fw-semibold mb-0">25 phút</p>
+                </div>
+            </div>
+
+            <h5 class="fw-bold mb-3">Thành phần chính</h5>
+            <ul class="list-unstyled text-muted">
+                <li>• Sợi mì làm từ bột gạo, nhuộm nghệ</li>
+                <li>• Tôm sú, thịt heo ba rọi ướp gia vị</li>
+                <li>• Rau sống Trà Quế, đậu phộng rang, hành phi</li>
+                <li>• Bánh tráng nướng giòn, chanh ớt tươi</li>
+            </ul>
+
+            <div class="d-flex gap-3 mt-4">
+                <a class="btn btn-primary btn-lg px-4" asp-action="CreatePost">Chia sẻ cảm nhận</a>
+                <a class="btn btn-outline-secondary btn-lg px-4" asp-action="Profile">Xem tác giả</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3">Câu chuyện món ăn</h4>
+                    <p>Mì Quảng được xem là "linh hồn" của ẩm thực Quảng Nam. Hương vị thơm nồng của nghệ hòa cùng 
+                        vị béo của đậu phộng rang tạo nên cảm giác khó quên. Khi ăn, người Quảng chỉ chan xăm xắp nước dùng, 
+                        nhờ vậy sợi mì vẫn giữ được độ dai và thấm vị.</p>
+                    <p>Cách ăn đúng điệu là bẻ bánh tráng mè vào tô, trộn đều với rau sống, thêm vài lát ớt xanh cay nồng. 
+                        Mỗi quán lại có bí quyết nêm nếm riêng, tạo nên sự phong phú đầy cá tính cho món mì quen thuộc này.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Thông tin thêm</h5>
+                    <p class="mb-2"><strong>Địa chỉ gợi ý:</strong> 45 Lê Lợi, TP. Đà Nẵng</p>
+                    <p class="mb-2"><strong>Thời điểm ngon nhất:</strong> Buổi sáng</p>
+                    <p class="mb-2"><strong>Phù hợp:</strong> Người thích vị đậm đà, ăn kèm rau sống</p>
+                    <p class="mb-0"><strong>Mẹo nhỏ:</strong> Thêm vài giọt chanh trước khi ăn để dậy mùi nghệ.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

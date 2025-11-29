@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Trang cá nhân";
+}
+
+<section class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 text-center">
+                <div class="card-body">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=400&q=80" alt="Avatar" class="rounded-circle mb-3" style="width: 140px; height: 140px; object-fit: cover;">
+                    <h3 class="fw-bold mb-1">Nguyễn Minh Anh</h3>
+                    <p class="text-muted">Nhà sáng tạo nội dung ẩm thực</p>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        <div>
+                            <h4 class="fw-bold mb-0">48</h4>
+                            <small class="text-muted">Bài viết</small>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">126</h4>
+                            <small class="text-muted">Món yêu thích</small>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">4.9</h4>
+                            <small class="text-muted">Đánh giá</small>
+                        </div>
+                    </div>
+                    <a class="btn btn-primary w-100 mt-4" asp-action="CreatePost">Đăng bài mới</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3">Giới thiệu</h4>
+                    <p class="text-muted">Mình thích đi và viết về những món ăn mang đậm bản sắc địa phương. 
+                        Mỗi chuyến đi là một cơ hội khám phá câu chuyện phía sau từng hương vị.</p>
+                </div>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3">Hoạt động gần đây</h4>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Chè bắp Hội An</h6>
+                                    <p class="mb-0 text-muted small">Cập nhật bí quyết nấu chè chuẩn vị miền Trung.</p>
+                                </div>
+                                <span class="text-muted small">2 giờ trước</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Set menu miền Tây</h6>
+                                    <p class="mb-0 text-muted small">Thêm bộ ảnh mới vào album "Hương vị miền sông nước".</p>
+                                </div>
+                                <span class="text-muted small">Hôm qua</span>
+                            </div>
+                        </div>
+                        <div class="list-group-item px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h6 class="mb-1 fw-bold">Gợi ý quán phở đêm Hà Nội</h6>
+                                    <p class="mb-0 text-muted small">Đánh giá 5 địa điểm mở cửa đến 2h sáng.</p>
+                                </div>
+                                <span class="text-muted small">2 ngày trước</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

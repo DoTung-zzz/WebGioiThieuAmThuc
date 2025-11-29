@@ -1,0 +1,61 @@
+@{
+    ViewData["Title"] = "Đăng bài mới";
+}
+
+<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <p class="text-muted mb-1">Chia sẻ trải nghiệm ẩm thực của bạn</p>
+                            <h3 class="fw-bold mb-0">Đăng bài mới</h3>
+                        </div>
+                        <span class="badge bg-primary bg-opacity-25 text-primary px-3 py-2 rounded-pill">Bản nháp</span>
+                    </div>
+
+                    <form novalidate>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Tên món / chủ đề</label>
+                            <input type="text" class="form-control form-control-lg" placeholder="Ví dụ: Bún mắm miền Tây">
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Khu vực</label>
+                                <select class="form-select form-select-lg">
+                                    <option selected disabled>Chọn miền</option>
+                                    <option>Miền Bắc</option>
+                                    <option>Miền Trung</option>
+                                    <option>Miền Nam</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Mức giá tham khảo</label>
+                                <input type="text" class="form-control form-control-lg" placeholder="50.000 - 80.000đ">
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Nội dung chính</label>
+                            <textarea class="form-control" rows="6" placeholder="Chia sẻ bí quyết, hương vị, trải nghiệm..."></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Ảnh minh họa</label>
+                            <input type="file" class="form-control">
+                            <small class="text-muted">Hỗ trợ định dạng JPG, PNG, tối đa 5MB.</small>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="button" class="btn btn-primary btn-lg px-4">Xuất bản</button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Lưu nháp</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

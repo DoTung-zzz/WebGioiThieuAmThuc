@@ -50,6 +50,17 @@
                              <li class="nav-item">
                                 <a class="nav-link" asp-controller="Specialties" asp-action="Create">Đăng bài</a>
                             </li>
+                            @{
+                                var role = HttpContextAccessor.HttpContext?.Session.GetString("Role");
+                                if (role == "admin")
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-warning" asp-controller="Specialties" asp-action="PendingPosts">
+                                            <i class="fas fa-clipboard-check me-1"></i>Duyệt bài
+                                        </a>
+                                    </li>
+                                }
+                            }
                         }
                     </ul>
                     <ul class="navbar-nav">

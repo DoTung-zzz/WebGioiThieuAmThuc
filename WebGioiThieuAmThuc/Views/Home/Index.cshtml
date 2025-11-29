@@ -24,53 +24,50 @@
     </div>
 
     <div class="row g-4">
-        <!-- Placeholder Item 1 -->
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Pho Bo" style="height: 250px; object-fit: cover;">
-                <div class="card-body">
-                    <span class="badge bg-primary mb-2">Miền Bắc</span>
-                    <h5 class="card-title fw-bold">Phở Bò</h5>
-                    <p class="card-text text-muted small">Món phở truyền thống với nước dùng bò đậm đà và thảo mộc tươi.</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-warning"><i class="fas fa-star"></i> 4.9</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
+        @{
+            var featuredSpecialties = ViewData["FeaturedSpecialties"] as IEnumerable<WebGioiThieuAmThuc.Models.Specialty>;
+        }
+        @if (featuredSpecialties != null && featuredSpecialties.Any())
+        {
+            @foreach (var item in featuredSpecialties)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm hover-card">
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/400x250?text=No+Image" class="card-img-top" alt="No Image" style="height: 250px; object-fit: cover;">
+                            }
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-3">@item.Region?.RegionName</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">@item.Name</h5>
+                            <p class="card-text text-muted small">@(string.IsNullOrEmpty(item.ShortDescription) ? "Món ăn đặc sản Việt Nam" : (item.ShortDescription.Length > 80 ? item.ShortDescription.Substring(0, 80) + "..." : item.ShortDescription))</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                @{
+                                    var avgRating = item.Ratings?.Any() == true ? item.Ratings.Average(r => r.Rating1) : 0;
+                                }
+                                <span class="text-warning">
+                                    <i class="fas fa-star"></i> @avgRating.ToString("F1")
+                                </span>
+                                <a asp-controller="Specialties" asp-action="Details" asp-route-id="@item.SpecialtyId" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <p class="text-muted">Chưa có đặc sản nào được đăng. Hãy là người đầu tiên đăng bài!</p>
+                <a asp-controller="Specialties" asp-action="Create" class="btn btn-primary">Đăng bài ngay</a>
             </div>
-        </div>
-
-        <!-- Placeholder Item 2 -->
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1513262640554-b26a4350d964?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Bun Cha" style="height: 250px; object-fit: cover;">
-                <div class="card-body">
-                    <span class="badge bg-primary mb-2">Hà Nội</span>
-                    <h5 class="card-title fw-bold">Bún Chả</h5>
-                    <p class="card-text text-muted small">Chả nướng ăn kèm bún và rau sống.</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-warning"><i class="fas fa-star"></i> 4.8</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Placeholder Item 3 -->
-        <div class="col-md-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <img src="https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img-top" alt="Banh Mi" style="height: 250px; object-fit: cover;">
-                <div class="card-body">
-                    <span class="badge bg-secondary mb-2">Toàn quốc</span>
-                    <h5 class="card-title fw-bold">Bánh Mì</h5>
-                    <p class="card-text text-muted small">Bánh mì giòn tan với nhân thịt, pate và rau dưa.</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="text-warning"><i class="fas fa-star"></i> 4.7</span>
-                        <a href="#" class="btn btn-outline-primary btn-sm rounded-pill">Xem Chi tiết</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 

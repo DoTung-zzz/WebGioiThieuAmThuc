@@ -1,0 +1,89 @@
+@model IEnumerable<WebGioiThieuAmThuc.Models.Specialty>
+
+@{
+    ViewData["Title"] = "Duyệt bài đăng";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="display-5 fw-bold text-primary">Duyệt bài đăng</h1>
+            <p class="text-muted">Các bài đăng đang chờ phê duyệt</p>
+        </div>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5">
+            <i class="fas fa-check-circle fa-3x mb-3 text-success"></i>
+            <h4>Không có bài đăng nào chờ duyệt</h4>
+            <p class="text-muted">Tất cả các bài đăng đã được xử lý.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" class="card-img-top" alt="@item.Name" style="height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="https://via.placeholder.com/400x250?text=No+Image" class="card-img-top" alt="No Image" style="height: 250px; object-fit: cover;">
+                            }
+                            <span class="badge bg-warning position-absolute top-0 end-0 m-3">Chờ duyệt</span>
+                            <span class="badge bg-primary position-absolute top-0 start-0 m-3">@item.Region?.RegionName</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">@item.Name</h5>
+                            <p class="card-text text-muted text-truncate-3">@item.ShortDescription</p>
+                            <small class="text-muted d-block mb-2">
+                                <i class="fas fa-user me-1"></i>@(item.CreatedByNavigation?.Fullname ?? item.CreatedByNavigation?.Username ?? "Thành viên")
+                            </small>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-1"></i>@(item.CreatedAt?.ToString("dd/MM/yyyy HH:mm"))
+                            </small>
+                        </div>
+                        <div class="card-footer bg-white border-0">
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a asp-action="Details" asp-route-id="@item.SpecialtyId" class="btn btn-info btn-sm flex-grow-1">
+                                    <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                </a>
+                                <form asp-action="Approve" asp-route-id="@item.SpecialtyId" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check me-1"></i>Duyệt
+                                    </button>
+                                </form>
+                                <form asp-action="Reject" asp-route-id="@item.SpecialtyId" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn từ chối bài đăng này?');">
+                                        <i class="fas fa-times me-1"></i>Từ chối
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .text-truncate-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>
+

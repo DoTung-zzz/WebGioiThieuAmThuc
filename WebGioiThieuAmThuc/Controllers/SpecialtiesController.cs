@@ -22,8 +22,26 @@ namespace WebGioiThieuAmThuc.Controllers
         // GET: Specialties
         public async Task<IActionResult> Index(string searchString, int? regionId)
         {
+            var userId = HttpContext.Session.GetString("UserId");
+            var userRole = HttpContext.Session.GetString("Role");
+            
             var specialties = from s in _context.Specialties.Include(s => s.Region).Include(s => s.CreatedByNavigation)
                               select s;
+
+            // Admin can see all, members see only approved + their own pending/rejected
+            if (userRole != "admin")
+            {
+                if (userId != null)
+                {
+                    var userIdInt = int.Parse(userId);
+                    specialties = specialties.Where(s => s.Status == "approved" || s.CreatedBy == userIdInt);
+                }
+                else
+                {
+                    // Not logged in - only show approved
+                    specialties = specialties.Where(s => s.Status == "approved");
+                }
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -38,7 +56,7 @@ namespace WebGioiThieuAmThuc.Controllers
             ViewData["Regions"] = await _context.Regions.ToListAsync();
             ViewData["CurrentRegion"] = regionId;
 
-            return View(await specialties.ToListAsync());
+            return View(await specialties.OrderByDescending(s => s.CreatedAt).ToListAsync());
         }
 
         // GET: Specialties/Details/5
@@ -71,7 +89,14 @@ namespace WebGioiThieuAmThuc.Controllers
                 return RedirectToAction("Login", "Users");
             }
 
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName");
+            // Get distinct regions ordered by ID to ensure no duplicates
+            var regions = _context.Regions
+                .GroupBy(r => r.RegionId)
+                .Select(g => g.First())
+                .OrderBy(r => r.RegionId)
+                .ToList();
+            
+            ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName");
             return View();
         }
 
@@ -88,30 +113,58 @@ namespace WebGioiThieuAmThuc.Controllers
 
             if (ModelState.IsValid)
             {
+                // Handle image upload - priority: file upload > URL
                 if (imageFile != null && imageFile.Length > 0)
                 {
-                    var fileName = Path.GetFileName(imageFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/specialties", fileName);
+                    // Validate file type
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                    var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                    if (!allowedExtensions.Contains(fileExtension))
+                    {
+                        ModelState.AddModelError("ImageUrl", "Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif, webp)");
+                        ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName", specialty.RegionId);
+                        return View(specialty);
+                    }
+
+                    // Generate unique filename to avoid conflicts
+                    var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "specialties");
                     
                     // Ensure directory exists
-                    Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/specialties"));
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                     using (var stream = new FileStream(filePath, FileMode.Create))
                     {
                         await imageFile.CopyToAsync(stream);
                     }
-                    specialty.ImageUrl = "/images/specialties/" + fileName;
+                    
+                    specialty.ImageUrl = "/images/specialties/" + uniqueFileName;
                 }
+                // If no file upload but URL is provided, use URL
+                else if (!string.IsNullOrWhiteSpace(specialty.ImageUrl))
+                {
+                    // URL is already set, keep it
+                }
+                // If neither file nor URL, ImageUrl remains null
 
                 specialty.CreatedBy = int.Parse(userId);
                 specialty.CreatedAt = DateTime.Now;
-                specialty.Status = "pending"; // Default status
+                specialty.Status = "pending"; // Default status - needs admin approval
 
                 _context.Add(specialty);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName", specialty.RegionId);
+            // Get distinct regions ordered by ID to ensure no duplicates
+            var regions = _context.Regions
+                .GroupBy(r => r.RegionId)
+                .Select(g => g.First())
+                .OrderBy(r => r.RegionId)
+                .ToList();
+            
+            ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);
             return View(specialty);
         }
 
@@ -131,40 +184,114 @@ namespace WebGioiThieuAmThuc.Controllers
 
             // Check permission
             var userId = HttpContext.Session.GetString("UserId");
-            var userRole = HttpContext.Session.GetString("Role"); // Assuming we store Role in session, need to update Login to store it.
-            
-            // For now, let's re-fetch user role if not in session or just rely on logic
-            // But wait, Login logic in UsersController didn't store Role. I need to update UsersController later.
-            // For now, I'll assume I will fix Login.
-            
-            if (userId == null) return RedirectToAction("Login", "Users");
-            
-            // Allow if owner or admin (we'll implement admin check properly later, for now just owner check)
-            if (specialty.CreatedBy != int.Parse(userId))
+            if (userId == null)
             {
-                 // If not owner, check if admin (will implement later)
-                 // For now return Unauthorized or Redirect
-                 return RedirectToAction("Index");
+                return RedirectToAction("Login", "Users");
             }
 
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName", specialty.RegionId);
+            var userRole = HttpContext.Session.GetString("Role");
+            // Allow if owner or admin
+            if (specialty.CreatedBy != int.Parse(userId) && userRole != "admin")
+            {
+                return Unauthorized();
+            }
+
+            // Get distinct regions ordered by ID to ensure no duplicates
+            var regions = _context.Regions
+                .GroupBy(r => r.RegionId)
+                .Select(g => g.First())
+                .OrderBy(r => r.RegionId)
+                .ToList();
+            
+            ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);
             return View(specialty);
         }
 
         // POST: Specialties/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SpecialtyId,RegionId,Name,ShortDescription,FullDescription,ImageUrl,CreatedBy,CreatedAt,Status")] Specialty specialty)
+        public async Task<IActionResult> Edit(int id, [Bind("SpecialtyId,RegionId,Name,ShortDescription,FullDescription,ImageUrl,CreatedBy,CreatedAt,Status")] Specialty specialty, IFormFile? imageFile)
         {
             if (id != specialty.SpecialtyId)
             {
                 return NotFound();
             }
 
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
+            // Check permission
+            var existingSpecialty = await _context.Specialties.FindAsync(id);
+            if (existingSpecialty == null)
+            {
+                return NotFound();
+            }
+
+            var userRole = HttpContext.Session.GetString("Role");
+            if (existingSpecialty.CreatedBy != int.Parse(userId) && userRole != "admin")
+            {
+                return Unauthorized();
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // Handle image upload
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        // Validate file type
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+                        var fileExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                        if (!allowedExtensions.Contains(fileExtension))
+                        {
+                            ModelState.AddModelError("ImageUrl", "Chỉ chấp nhận file ảnh (jpg, jpeg, png, gif, webp)");
+                            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName", specialty.RegionId);
+                            return View(specialty);
+                        }
+
+                        // Delete old image if it's a local file
+                        if (!string.IsNullOrEmpty(existingSpecialty.ImageUrl) && existingSpecialty.ImageUrl.StartsWith("/images/"))
+                        {
+                            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingSpecialty.ImageUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+
+                        // Generate unique filename
+                        var uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "specialties");
+                        Directory.CreateDirectory(uploadsFolder);
+
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+                        
+                        specialty.ImageUrl = "/images/specialties/" + uniqueFileName;
+                    }
+                    // If no new file but URL is provided, use URL
+                    else if (!string.IsNullOrWhiteSpace(specialty.ImageUrl))
+                    {
+                        // If changing from local file to URL, delete old file
+                        if (!string.IsNullOrEmpty(existingSpecialty.ImageUrl) && existingSpecialty.ImageUrl.StartsWith("/images/") && !specialty.ImageUrl.StartsWith("/images/"))
+                        {
+                            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", existingSpecialty.ImageUrl.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+                        // URL is already set, keep it
+                    }
+
                     _context.Update(specialty);
                     await _context.SaveChangesAsync();
                 }
@@ -181,7 +308,14 @@ namespace WebGioiThieuAmThuc.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RegionId"] = new SelectList(_context.Regions, "RegionId", "RegionName", specialty.RegionId);
+            // Get distinct regions ordered by ID to ensure no duplicates
+            var regions = _context.Regions
+                .GroupBy(r => r.RegionId)
+                .Select(g => g.First())
+                .OrderBy(r => r.RegionId)
+                .ToList();
+            
+            ViewData["RegionId"] = new SelectList(regions, "RegionId", "RegionName", specialty.RegionId);
             return View(specialty);
         }
 
@@ -256,13 +390,16 @@ namespace WebGioiThieuAmThuc.Controllers
         public async Task<IActionResult> Approve(int id)
         {
             var userId = HttpContext.Session.GetString("UserId");
-            // Check if admin (simple check for now, should be robust role check)
-            // Assuming we will fix Login to store Role properly or re-fetch here
-             var user = await _context.Users.FindAsync(int.Parse(userId));
-             if (user == null || user.Role != "admin")
-             {
-                 return Unauthorized();
-             }
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null || user.Role != "admin")
+            {
+                return Unauthorized();
+            }
 
             var specialty = await _context.Specialties.FindAsync(id);
             if (specialty == null)
@@ -274,7 +411,7 @@ namespace WebGioiThieuAmThuc.Controllers
             _context.Update(specialty);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("PendingPosts");
         }
 
         // POST: Specialties/Reject/5
@@ -283,6 +420,11 @@ namespace WebGioiThieuAmThuc.Controllers
         public async Task<IActionResult> Reject(int id)
         {
              var userId = HttpContext.Session.GetString("UserId");
+             if (userId == null)
+             {
+                 return RedirectToAction("Login", "Users");
+             }
+             
              var user = await _context.Users.FindAsync(int.Parse(userId));
              if (user == null || user.Role != "admin")
              {
@@ -299,7 +441,32 @@ namespace WebGioiThieuAmThuc.Controllers
             _context.Update(specialty);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("PendingPosts");
+        }
+
+        // GET: Specialties/PendingPosts - Admin review page
+        public async Task<IActionResult> PendingPosts()
+        {
+            var userId = HttpContext.Session.GetString("UserId");
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
+            var user = await _context.Users.FindAsync(int.Parse(userId));
+            if (user == null || user.Role != "admin")
+            {
+                return Unauthorized();
+            }
+
+            var pendingSpecialties = await _context.Specialties
+                .Include(s => s.Region)
+                .Include(s => s.CreatedByNavigation)
+                .Where(s => s.Status == "pending")
+                .OrderByDescending(s => s.CreatedAt)
+                .ToListAsync();
+
+            return View(pendingSpecialties);
         }
     }
 }

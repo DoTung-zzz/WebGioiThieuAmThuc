@@ -4,48 +4,82 @@
     ViewData["Title"] = "Chỉnh sửa đặc sản";
 }
 
-<h1>Chỉnh sửa đặc sản</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-edit me-2"></i>Chỉnh sửa đặc sản</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="SpecialtyId" />
+                        <input type="hidden" asp-for="CreatedBy" />
+                        <input type="hidden" asp-for="CreatedAt" />
+                        <input type="hidden" asp-for="Status" />
 
-<hr />
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="SpecialtyId" />
-            <input type="hidden" asp-for="CreatedBy" />
-            <input type="hidden" asp-for="CreatedAt" />
-            <input type="hidden" asp-for="Status" />
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label fw-bold">Tên đặc sản</label>
+                            <input asp-for="Name" class="form-control" placeholder="Ví dụ: Phở Bò Hà Nội" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="control-label">Tên đặc sản</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="RegionId" class="form-label fw-bold">Vùng miền</label>
+                            <select asp-for="RegionId" class="form-select" asp-items="ViewBag.RegionId">
+                                <option value="">-- Chọn vùng miền --</option>
+                            </select>
+                            <span asp-validation-for="RegionId" class="text-danger"></span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Hình ảnh hiện tại</label>
+                                <div>
+                                    <img src="@Model.ImageUrl" alt="@Model.Name" class="img-thumbnail" style="max-height: 200px;" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thay đổi hình ảnh (tùy chọn)</label>
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                            <small class="text-muted">Chọn ảnh mới từ máy tính hoặc nhập URL bên dưới</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label fw-bold">Link hình ảnh (URL)</label>
+                            <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                            <small class="text-muted">Nếu bạn chọn ảnh từ máy tính, URL này sẽ bị ghi đè</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ShortDescription" class="form-label fw-bold">Mô tả ngắn</label>
+                            <textarea asp-for="ShortDescription" class="form-control" rows="2" placeholder="Mô tả ngắn gọn về đặc sản..."></textarea>
+                            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="FullDescription" class="form-label fw-bold">Mô tả chi tiết</label>
+                            <textarea asp-for="FullDescription" class="form-control" rows="5" placeholder="Mô tả chi tiết về đặc sản, nguồn gốc, cách chế biến..."></textarea>
+                            <span asp-validation-for="FullDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-2"></i>Lưu thay đổi
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary px-4">
+                                <i class="fas fa-times me-2"></i>Hủy
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group mb-3">
-                <label asp-for="RegionId" class="control-label">Vùng miền</label>
-                <select asp-for="RegionId" class="form-control" asp-items="ViewBag.RegionId"></select>
-                <span asp-validation-for="RegionId" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="ImageUrl" class="control-label">Link hình ảnh</label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="ShortDescription" class="control-label">Mô tả ngắn</label>
-                <textarea asp-for="ShortDescription" class="form-control" rows="3"></textarea>
-                <span asp-validation-for="ShortDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group mb-3">
-                <label asp-for="FullDescription" class="control-label">Mô tả chi tiết</label>
-                <textarea asp-for="FullDescription" class="form-control" rows="10"></textarea>
-                <span asp-validation-for="FullDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

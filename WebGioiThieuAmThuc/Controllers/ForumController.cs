@@ -21,15 +21,32 @@ namespace WebGioiThieuAmThuc.Controllers
         // GET: Forum
         public async Task<IActionResult> Index()
         {
+            var userId = HttpContext.Session.GetString("UserId");
+            var userRole = HttpContext.Session.GetString("Role");
+            
             // Get all specialties (posts) ordered by newest first
-            var posts = await _context.Specialties
+            var posts = _context.Specialties
                 .Include(s => s.Region)
                 .Include(s => s.CreatedByNavigation)
                 .Include(s => s.Ratings)
-                .OrderByDescending(s => s.CreatedAt)
-                .ToListAsync();
+                .AsQueryable();
 
-            return View(posts);
+            // Admin can see all, members see only approved + their own pending/rejected
+            if (userRole != "admin")
+            {
+                if (userId != null)
+                {
+                    var userIdInt = int.Parse(userId);
+                    posts = posts.Where(s => s.Status == "approved" || s.CreatedBy == userIdInt);
+                }
+                else
+                {
+                    // Not logged in - only show approved
+                    posts = posts.Where(s => s.Status == "approved");
+                }
+            }
+
+            return View(await posts.OrderByDescending(s => s.CreatedAt).ToListAsync());
         }
     }
 }

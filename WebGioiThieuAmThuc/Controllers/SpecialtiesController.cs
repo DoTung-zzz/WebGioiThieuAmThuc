@@ -81,7 +81,7 @@ namespace WebGioiThieuAmThuc.Controllers
         }
 
         // GET: Specialties/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // Check if user is logged in
             if (HttpContext.Session.GetString("UserId") == null)
@@ -90,7 +90,9 @@ namespace WebGioiThieuAmThuc.Controllers
             }
 
             // Get distinct regions ordered by Name to ensure no duplicates
-            var regions = _context.Regions
+            // Fix: Fetch all first, then group in memory to avoid EF Core translation error
+            var allRegions = await _context.Regions.ToListAsync();
+            var regions = allRegions
                 .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
                 .OrderBy(r => r.RegionName)
@@ -110,6 +112,9 @@ namespace WebGioiThieuAmThuc.Controllers
             {
                 return RedirectToAction("Login", "Users");
             }
+
+            // Remove Region from validation as it's a navigation property populated by EF
+            ModelState.Remove("Region");
 
             if (ModelState.IsValid)
             {
@@ -158,7 +163,9 @@ namespace WebGioiThieuAmThuc.Controllers
                 return RedirectToAction(nameof(Index));
             }
             // Get distinct regions ordered by Name to ensure no duplicates
-            var regions = _context.Regions
+            // Fix: Fetch all first, then group in memory
+            var allRegions = await _context.Regions.ToListAsync();
+            var regions = allRegions
                 .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
                 .OrderBy(r => r.RegionName)
@@ -197,7 +204,9 @@ namespace WebGioiThieuAmThuc.Controllers
             }
 
             // Get distinct regions ordered by Name to ensure no duplicates
-            var regions = _context.Regions
+            // Fix: Fetch all first, then group in memory
+            var allRegions = await _context.Regions.ToListAsync();
+            var regions = allRegions
                 .GroupBy(r => r.RegionName)
                 .Select(g => g.First())
                 .OrderBy(r => r.RegionName)
@@ -235,6 +244,9 @@ namespace WebGioiThieuAmThuc.Controllers
             {
                 return Unauthorized();
             }
+
+            // Remove Region from validation
+            ModelState.Remove("Region");
 
             if (ModelState.IsValid)
             {

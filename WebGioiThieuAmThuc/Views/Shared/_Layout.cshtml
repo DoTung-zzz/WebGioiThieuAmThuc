@@ -50,16 +50,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Specialties" asp-action="Create">Đăng bài</a>
                             </li>
-                            @{
-                                var role = HttpContextAccessor.HttpContext?.Session.GetString("Role");
-                                if (role == "admin")
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-warning" asp-controller="Specialties" asp-action="PendingPosts">
-                                            <i class="fas fa-clipboard-check me-1"></i>Duyệt bài
-                                        </a>
-                                    </li>
-                                }
+
+                            var role = HttpContextAccessor.HttpContext?.Session.GetString("Role");
+                            if (role == "admin")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning" asp-controller="Specialties" asp-action="PendingPosts">
+                                        <i class="fas fa-clipboard-check me-1"></i>Duyệt bài
+                                    </a>
+                                </li>
                             }
                         }
                     </ul>
@@ -99,29 +98,32 @@
         </main>
     </div>
 
-    @* <footer class="border-top footer text-muted">
-        <div class="container text-center">
+    <footer class="border-top footer text-muted bg-light">
+        <div class="container py-4">
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <h5>AmThucViet</h5>
-                    <p class="small">Discover the best culinary experiences in Vietnam.</p>
+                    <h5 class="fw-bold"><i class="fas fa-utensils me-2"></i>Ẩm Thực Việt</h5>
+                    <p class="small">Khám phá và chia sẻ những món ăn đặc sản tuyệt vời của Việt Nam.</p>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5>Quick Links</h5>
+                    <h5 class="fw-bold">Liên kết nhanh</h5>
                     <ul class="list-unstyled">
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li><a asp-controller="Home" asp-action="Index" class="text-decoration-none text-muted">Trang chủ</a></li>
+                        <li><a asp-controller="Specialties" asp-action="Index" class="text-decoration-none text-muted">Tất cả đặc sản</a></li>
+                        <li><a asp-controller="Forum" asp-action="Index" class="text-decoration-none text-muted">Diễn đàn</a></li>
+                        <li><a asp-controller="Home" asp-action="Privacy" class="text-decoration-none text-muted">Chính sách</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <h5>Contact</h5>
-                    <p class="small">Email: contact@amthucviet.com</p>
+                    <h5 class="fw-bold">Liên hệ</h5>
+                    <p class="small mb-1"><i class="fas fa-envelope me-2"></i>Email: contact@amthucviet.com</p>
+                    <p class="small"><i class="fas fa-phone me-2"></i>Hotline: 1900-xxxx</p>
                 </div>
             </div>
             <hr />
-            <p>&copy; 2025 - WebGioiThieuAmThuc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+            <p class="text-center mb-0">&copy; 2025 - Ẩm Thực Việt - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Chính sách bảo mật</a></p>
         </div>
-    </footer> *@
+    </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

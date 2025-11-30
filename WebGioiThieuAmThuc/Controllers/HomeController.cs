@@ -19,16 +19,26 @@ namespace WebGioiThieuAmThuc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Get featured specialties (only approved, top 6 by rating or newest)
+            // Get featured specialties (only approved, top 10 by newest)
             var featuredSpecialties = await _context.Specialties
                 .Include(s => s.Region)
                 .Include(s => s.Ratings)
                 .Where(s => s.Status == "approved")
                 .OrderByDescending(s => s.CreatedAt)
-                .Take(6)
+                .Take(10)
+                .ToListAsync();
+
+            // Get all regions with specialty counts
+            var regions = await _context.Regions
+                .Select(r => new
+                {
+                    Region = r,
+                    SpecialtyCount = r.Specialties.Count(s => s.Status == "approved")
+                })
                 .ToListAsync();
 
             ViewData["FeaturedSpecialties"] = featuredSpecialties;
+            ViewData["Regions"] = regions;
             return View();
         }
 

@@ -50,8 +50,6 @@ namespace WebGioiThieuAmThuc.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,Username,PasswordHash,Fullname,Email,Phone,Role,CreatedAt,Status")] User user)
@@ -82,8 +80,6 @@ namespace WebGioiThieuAmThuc.Controllers
         }
 
         // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,PasswordHash,Fullname,Email,Phone,Role,CreatedAt,Status")] User user)
@@ -169,13 +165,25 @@ namespace WebGioiThieuAmThuc.Controllers
             {
                 if (UserExists(user.Username)) // Check if username exists
                 {
-                     ModelState.AddModelError("Username", "Username already exists.");
+                     ModelState.AddModelError("Username", "Tên đăng nhập đã tồn tại.");
                      return View(user);
+                }
+
+                // Check if email exists (hash it first to compare)
+                string hashedEmail = ComputeSha256Hash(user.Email);
+                if (_context.Users.Any(u => u.Email == hashedEmail))
+                {
+                    ModelState.AddModelError("Email", "Email này đã được sử dụng.");
+                    return View(user);
                 }
 
                 user.CreatedAt = DateTime.Now;
                 user.Status = true;
                 user.Role = "member"; // Default role
+                
+                // Hash sensitive data
+                user.PasswordHash = ComputeSha256Hash(user.PasswordHash);
+                user.Email = hashedEmail;
 
                 _context.Add(user);
                 await _context.SaveChangesAsync();
@@ -202,11 +210,30 @@ namespace WebGioiThieuAmThuc.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _context.Users
-                    .FirstOrDefaultAsync(u => u.Username == username && u.PasswordHash == password); // Note: In production, use proper hashing!
+                string hashedPassword = ComputeSha256Hash(password);
+                // Find user by username first
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
 
                 if (user != null)
                 {
+                    bool isValid = false;
+                    // 1. Check if password matches hash
+                    if (user.PasswordHash == hashedPassword)
+                    {
+                        isValid = true;
+                    }
+                    // 2. Check if password matches plain text (Legacy support)
+                    else if (user.PasswordHash == password)
+                    {
+                        isValid = true;
+                        // Auto-migrate to hash
+                        user.PasswordHash = hashedPassword;
+                        _context.Update(user);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    if (isValid)
+                    {
                     // Store user info in Session
                     HttpContext.Session.SetString("UserId", user.UserId.ToString());
                     HttpContext.Session.SetString("Username", user.Username);
@@ -221,7 +248,8 @@ namespace WebGioiThieuAmThuc.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                }
+                ModelState.AddModelError(string.Empty, "Tên đăng nhập hoặc mật khẩu không đúng.");
             }
             return View();
         }
@@ -269,7 +297,17 @@ namespace WebGioiThieuAmThuc.Controllers
                     if (existingUser == null) return NotFound();
 
                     existingUser.Fullname = user.Fullname;
-                    existingUser.Email = user.Email;
+                    if (existingUser.Email != user.Email)
+                    {
+                         string hashedNewEmail = ComputeSha256Hash(user.Email);
+                         if (_context.Users.Any(u => u.Email == hashedNewEmail && u.UserId != user.UserId))
+                         {
+                             ModelState.AddModelError("Email", "Email này đã được sử dụng.");
+                             return View(user);
+                         }
+                         existingUser.Email = hashedNewEmail;
+                    }
+                    
                     existingUser.Phone = user.Phone;
 
                     _context.Update(existingUser);
@@ -320,13 +358,15 @@ namespace WebGioiThieuAmThuc.Controllers
             }
 
             var user = await _context.Users.FindAsync(int.Parse(userId));
-            if (user == null || user.PasswordHash != currentPassword)
+            string hashedCurrentPassword = ComputeSha256Hash(currentPassword);
+
+            if (user == null || user.PasswordHash != hashedCurrentPassword)
             {
                 ViewBag.Error = "Mật khẩu hiện tại không đúng.";
                 return View();
             }
 
-            user.PasswordHash = newPassword;
+            user.PasswordHash = ComputeSha256Hash(newPassword);
             _context.Update(user);
             await _context.SaveChangesAsync();
 
@@ -345,7 +385,8 @@ namespace WebGioiThieuAmThuc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ForgotPassword(string username, string email, string newPassword)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Email == email);
+            string hashedEmail = ComputeSha256Hash(email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == username && u.Email == hashedEmail);
             
             if (user == null)
             {
@@ -353,12 +394,30 @@ namespace WebGioiThieuAmThuc.Controllers
                 return View();
             }
 
-            user.PasswordHash = newPassword;
+            user.PasswordHash = ComputeSha256Hash(newPassword);
             _context.Update(user);
             await _context.SaveChangesAsync();
 
             ViewBag.Success = "Đặt lại mật khẩu thành công!";
             return View();
+        }
+
+        // Helper method for SHA256 hashing
+        private static string ComputeSha256Hash(string rawData)
+        {
+            using (System.Security.Cryptography.SHA256 sha256Hash = System.Security.Cryptography.SHA256.Create())
+            {
+                // ComputeHash - returns byte array
+                byte[] bytes = sha256Hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(rawData));
+
+                // Convert byte array to a string
+                System.Text.StringBuilder builder = new System.Text.StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
         }
     }
 }
